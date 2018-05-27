@@ -1,12 +1,17 @@
 import { JsonController, Get, Param, Put, Body, Post, HttpCode, NotFoundError } from 'routing-controllers'
 import Game from './entity';
 
-
+const defaultBoard = [
+    ['o', 'o', 'o'],
+    ['o', 'o', 'o'],
+    ['o', 'o', 'o']
+]
 
 
 
 @JsonController()
 export default class gamesController {
+
 
 
 
@@ -24,24 +29,30 @@ export default class gamesController {
     @Body() game: Game
     ) {
         var things = ['red', 'blue', 'green','yellow','magenta'];
-        game.color=things[Math.floor(Math.random()*things.length)];  
+        game.color=things[Math.floor(Math.random()*things.length)];
+        game.board=defaultBoard  
     return game.save()
     }
-
-    // @Put('/games/:id')
-    // async updatePage(
-    // @Param('id') id: number,
-    // @Body() update: Partial<Game>
-    // ) {
-    // const page = await Game.findOne(id)
-    // if (!page) throw new NotFoundError('Cannot find page')
-
-    // return Page.merge(page, update).save()
-    // }
+    //http post :4000/games name=lol color=blue 
 
 
+    @Put('/games/:id')
+    async updatePage(
+    @Param('id') id: number,
+    @Body() update: Partial<Game>
+    ) {
+    const game = await Game.findOne(id)
 
-    //http post :4000/games name=lol color=blue board=test
+    if (!game) throw new NotFoundError('Cannot find page')
+    return Game.merge(game, update).save()
+    
+}
+
+   // http put :4000/games/7 name=newname color=nocolor 
+
+
+
+
 //http post :4000/games name=lol color=blue
 
 
@@ -59,3 +70,4 @@ export default class gamesController {
 
     
 }
+

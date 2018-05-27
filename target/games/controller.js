@@ -14,6 +14,11 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const routing_controllers_1 = require("routing-controllers");
 const entity_1 = require("./entity");
+const defaultBoard = [
+    ['o', 'o', 'o'],
+    ['o', 'o', 'o'],
+    ['o', 'o', 'o']
+];
 let gamesController = class gamesController {
     async allGames() {
         const games = await entity_1.default.find();
@@ -22,7 +27,14 @@ let gamesController = class gamesController {
     creategame(game) {
         var things = ['red', 'blue', 'green', 'yellow', 'magenta'];
         game.color = things[Math.floor(Math.random() * things.length)];
+        game.board = defaultBoard;
         return game.save();
+    }
+    async updatePage(id, update) {
+        const game = await entity_1.default.findOne(id);
+        if (!game)
+            throw new routing_controllers_1.NotFoundError('Cannot find page');
+        return entity_1.default.merge(game, update).save();
     }
 };
 __decorate([
@@ -39,6 +51,14 @@ __decorate([
     __metadata("design:paramtypes", [entity_1.default]),
     __metadata("design:returntype", void 0)
 ], gamesController.prototype, "creategame", null);
+__decorate([
+    routing_controllers_1.Put('/games/:id'),
+    __param(0, routing_controllers_1.Param('id')),
+    __param(1, routing_controllers_1.Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], gamesController.prototype, "updatePage", null);
 gamesController = __decorate([
     routing_controllers_1.JsonController()
 ], gamesController);

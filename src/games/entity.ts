@@ -1,12 +1,10 @@
 // src/games/entity.ts
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 import { BaseEntity } from 'typeorm/repository/BaseEntity'
+//import { IsIn, validate } from 'class-validator';
 
-const defaultBoard = [
-	['o', 'o', 'o'],
-	['o', 'o', 'o'],
-	['o', 'o', 'o']
-]
+
+
 
 @Entity()
 export default class Game extends BaseEntity {
@@ -17,14 +15,18 @@ export default class Game extends BaseEntity {
   @Column('text', {nullable:false})
   name: string
 
-  @Column('text', {nullable:false})
+ //@IsIn('text',{nullable:false}) 
+ @Column('text', {nullable:false})
   color: string
 
-  @Column('json', {default: defaultBoard})
-  board: JSON
+  @Column('json', {nullable:false})
+  board: string[][]
 }
 
-// \* the start position of the board in code:
+
+
+
+
 
 
 
