@@ -19,14 +19,32 @@ const defaultBoard = [
     ['o', 'o', 'o'],
     ['o', 'o', 'o']
 ];
+const colors = ['red', 'blue', 'green', 'yellow', 'magenta'];
+const checkcolor = (a) => (colors.indexOf(a) > -1);
+const bb1 = [
+    ['o', 'o', 'o'],
+    ['o', 'o', 'o'],
+    ['o', 'o', 'o']
+];
+const moves = (board1, board2) => board1
+    .map((row, y) => row.filter((cell, x) => board2[y][x] !== cell))
+    .reduce((a, b) => a.concat(b))
+    .length;
+const checkmoves = (b1, b2) => {
+    if (moves(b1, b2) < 2) {
+        return true;
+    }
+    else {
+        return false;
+    }
+};
 let gamesController = class gamesController {
     async allGames() {
         const games = await entity_1.default.find();
         return { games };
     }
     creategame(game) {
-        var things = ['red', 'blue', 'green', 'yellow', 'magenta'];
-        game.color = things[Math.floor(Math.random() * things.length)];
+        game.color = colors[Math.floor(Math.random() * colors.length)];
         game.board = defaultBoard;
         return game.save();
     }
@@ -34,6 +52,8 @@ let gamesController = class gamesController {
         const game = await entity_1.default.findOne(id);
         if (!game)
             throw new routing_controllers_1.NotFoundError('Cannot find page');
+        if (!checkcolor(update.color))
+            throw new routing_controllers_1.NotFoundError('wrong color');
         return entity_1.default.merge(game, update).save();
     }
 };
